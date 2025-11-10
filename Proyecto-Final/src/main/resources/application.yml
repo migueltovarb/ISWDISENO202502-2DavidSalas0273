@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: Vet Care Pro
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/vetcarepro}
+      database: ${MONGODB_DB:vetcarepro}
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    username: ${MAIL_USERNAME:demo}
+    password: ${MAIL_PASSWORD:demo}
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: ${SERVER_PORT:8080}
+
+jwt:
+  secret: dW5TZWNyZXRvU3VwZXJMYXJnb1NlZ3VybzEyMzQ1Ng==
+  expiration-minutes: ${JWT_EXPIRATION_MINUTES:60}
+
+git:
+  auto-push:
+    enabled: ${GIT_AUTO_PUSH_ENABLED:true}
+    script: ${GIT_AUTO_PUSH_SCRIPT:./scripts/auto-push.sh}
+    watch-root: ${GIT_AUTO_PUSH_ROOT:.}
+    debounce-ms: ${GIT_AUTO_PUSH_DEBOUNCE_MS:4000}
+  branch: ${GIT_AUTO_PUSH_BRANCH:main}
+
+certificate:
+  storage-path: ${CERTIFICATE_STORAGE_PATH:certificates}
+
+reminder:
+  appointment-ahead-minutes: ${REMINDER_APPOINTMENT_MINUTES:1440}
+  vaccine-ahead-days: ${REMINDER_VACCINE_DAYS:7}
+  scheduler:
+    delay: ${REMINDER_RUN_EVERY_MS:60000}
+
+notification:
+  channels: ${NOTIFICATION_CHANNELS:EMAIL,WHATSAPP}

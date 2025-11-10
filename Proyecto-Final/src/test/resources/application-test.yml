@@ -1,0 +1,16 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/disabled
+jwt:
+  secret: dGVzdHNlY3JldGtleTEyMzQ1Njc4OTA=
+git:
+  auto-push:
+    enabled: false
+logging:
+  level:
+    root: WARN
