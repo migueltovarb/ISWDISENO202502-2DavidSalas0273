@@ -1,0 +1,14 @@
+com\example\Backend\mapper\VehicleMapper.class
+com\example\Backend\controller\VehicleController.class
+com\example\Backend\console\VehicleCliRunner.class
+com\example\Backend\console\VehicleConsoleMenu.class
+com\example\Backend\exception\ApiExceptionHandler$ApiError.class
+com\example\Backend\exception\ApiExceptionHandler.class
+com\example\Backend\exception\NotFoundException.class
+com\example\Backend\factory\VehicleFactory.class
+com\example\Backend\Application.class
+com\example\Backend\service\VehicleService.class
+com\example\Backend\service\impl\VehicleServiceImpl.class
+com\example\Backend\repository\VehicleRepository.class
+com\example\Backend\dto\VehicleDTO.class
+com\example\Backend\model\Vehicle.class

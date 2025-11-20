@@ -1,0 +1,5 @@
+com\example\Backend\ApplicationTests.class
+com\example\Backend\factory\VehicleFactoryTest.class
+com\example\Backend\service\VehicleServiceImplTest.class
+com\example\Backend\mapper\VehicleMapperTest.class
+com\example\Backend\controller\VehicleControllerTest.class
