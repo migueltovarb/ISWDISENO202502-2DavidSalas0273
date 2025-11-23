@@ -1,10 +1,9 @@
 package com.vetcarepro.service;
 
-import java.util.Map;
-
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,20 +33,29 @@ public class AuthService {
     private final JwtService jwtService;
 
     public AuthResponse login(AuthRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-        );
-        String token = jwtService.generateToken((org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal(), Map.of());
-        Role role = userRepository.findFirstByUsernameIgnoreCase(request.getUsername())
-            .map(UserAccount::getRole)
-            .orElse(Role.OWNER);
-        return new AuthResponse(token, role);
+        UserAccount user = userRepository.findFirstByEmailIgnoreCase(request.getEmail())
+            .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
+
+        if (!user.isEnabled()) {
+            throw new DisabledException("User account is disabled");
+        }
+
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+        } catch (BadCredentialsException ex) {
+            throw new BadCredentialsException("Invalid email or password");
+        }
+
+        String token = jwtService.generateToken(user);
+        return new AuthResponse(token, user.getRole(), user.getId());
     }
 
     public PetOwner registerOwner(RegisterOwnerRequest request) {
-        ensureUsernameAvailable(request.getUsername());
+        ensureEmailAvailable(request.getEmail());
         UserAccount user = UserAccount.builder()
-            .username(request.getUsername())
+            .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.OWNER)
             .build();
@@ -59,15 +67,18 @@ public class AuthService {
             .phone(request.getPhone())
             .address(request.getAddress())
             .build();
-        return petOwnerService.create(owner);
+        owner = petOwnerService.create(owner);
+        user.setReferenceId(owner.getId());
+        userRepository.save(user);
+        return owner;
     }
 
     public Veterinarian registerVeterinarian(RegisterVeterinarianRequest request) {
-        ensureUsernameAvailable(request.getUsername());
+        ensureEmailAvailable(request.getEmail());
         UserAccount user = UserAccount.builder()
-            .username(request.getUsername())
+            .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
-            .role(Role.VET)
+            .role(Role.VETERINARIAN)
             .build();
         user = userRepository.save(user);
         Veterinarian veterinarian = Veterinarian.builder()
@@ -78,13 +89,16 @@ public class AuthService {
             .licenseNumber(request.getLicenseNumber())
             .specialization(request.getSpecialization())
             .build();
-        return veterinarianService.create(veterinarian);
+        veterinarian = veterinarianService.create(veterinarian);
+        user.setReferenceId(veterinarian.getId());
+        userRepository.save(user);
+        return veterinarian;
     }
 
-    private void ensureUsernameAvailable(String username) {
-        userRepository.findFirstByUsernameIgnoreCase(username)
+    private void ensureEmailAvailable(String email) {
+        userRepository.findFirstByEmailIgnoreCase(email)
             .ifPresent(existing -> {
-                throw new BusinessRuleException("Username already registered: " + username);
+                throw new BusinessRuleException("Email already registered: " + email);
             });
     }
 }

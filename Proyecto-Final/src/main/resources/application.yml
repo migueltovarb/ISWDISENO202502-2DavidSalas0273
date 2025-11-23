@@ -3,7 +3,7 @@ spring:
     name: Vet Care Pro
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/vetcarepro}
+      uri: "${MONGODB_URI:mongodb+srv://alejo:Vetcare123@vetcarepro.8whypny.mongodb.net/vetcarepro?retryWrites=true&w=majority&appName=VetCarePro}"
       database: ${MONGODB_DB:vetcarepro}
   mail:
     host: ${MAIL_HOST:localhost}

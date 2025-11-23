@@ -2,11 +2,15 @@ package com.vetcarepro.security.jwt;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import com.vetcarepro.domain.entity.UserAccount;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -28,11 +32,22 @@ public class JwtService {
         this.expirationMinutes = expirationMinutes;
     }
 
-    public String generateToken(UserDetails userDetails, Map<String, Object> claims) {
+    public String generateToken(UserAccount userAccount) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userAccount.getId());
+        claims.put("email", userAccount.getEmail());
+        claims.put("role", userAccount.getRole().name());
+        if (userAccount.getReferenceId() != null) {
+            claims.put("referenceId", userAccount.getReferenceId());
+        }
+        return buildToken(claims, userAccount.getEmail());
+    }
+
+    private String buildToken(Map<String, Object> claims, String subject) {
         Instant now = Instant.now();
         return Jwts.builder()
             .setClaims(claims)
-            .setSubject(userDetails.getUsername())
+            .setSubject(subject)
             .setIssuedAt(Date.from(now))
             .setExpiration(Date.from(now.plusSeconds(expirationMinutes * 60)))
             .signWith(Keys.hmacShaKeyFor(secret), SignatureAlgorithm.HS256)
@@ -40,19 +55,33 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        String email = extractEmail(token);
+        return email.equalsIgnoreCase(userDetails.getUsername())
+            && userDetails.isEnabled()
+            && !isTokenExpired(token);
     }
 
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
+    public String extractEmail(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", String.class));
+    }
+
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> resolver) {
+        return resolver.apply(extractAllClaims(token));
     }
 
     private boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
             .setSigningKey(Keys.hmacShaKeyFor(secret))
             .build()

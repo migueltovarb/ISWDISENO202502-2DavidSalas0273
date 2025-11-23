@@ -3,7 +3,6 @@ package com.vetcarepro.security;
 import java.util.List;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,17 +19,17 @@ public class UserAccountDetailsService implements UserDetailsService {
     private final UserAccountRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findFirstByUsernameIgnoreCase(username)
-            .map(user -> new User(
-                user.getUsername(),
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findFirstByEmailIgnoreCase(email)
+            .map(user -> new UserAccountPrincipal(
+                user.getId(),
+                user.getEmail(),
                 user.getPassword(),
+                user.getRole(),
+                user.getReferenceId(),
                 user.isEnabled(),
-                true,
-                true,
-                true,
                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
             ))
-            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
 }

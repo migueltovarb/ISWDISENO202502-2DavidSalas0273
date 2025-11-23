@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.vetcarepro.domain.entity.UserAccount;
 
 public interface UserAccountRepository extends MongoRepository<UserAccount, String> {
-    Optional<UserAccount> findByUsername(String username);
+    Optional<UserAccount> findByEmail(String email);
 
-    Optional<UserAccount> findFirstByUsernameIgnoreCase(String username);
+    Optional<UserAccount> findFirstByEmailIgnoreCase(String email);
 }

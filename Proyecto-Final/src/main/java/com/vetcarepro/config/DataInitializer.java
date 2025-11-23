@@ -14,11 +14,11 @@ public class DataInitializer {
 
     @Bean
     CommandLineRunner seedAdmin(UserAccountRepository repository, PasswordEncoder encoder) {
-        return args -> repository.findFirstByUsernameIgnoreCase("admin")
+        return args -> repository.findFirstByEmailIgnoreCase("admin@vetcarepro.local")
             .ifPresentOrElse(
                 user -> {},
                 () -> repository.save(UserAccount.builder()
-                    .username("admin")
+                    .email("admin@vetcarepro.local")
                     .password(encoder.encode("admin123"))
                     .role(Role.ADMIN)
                     .build())

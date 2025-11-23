@@ -8,4 +8,6 @@ import com.vetcarepro.domain.entity.Veterinarian;
 
 public interface VeterinarianRepository extends MongoRepository<Veterinarian, String> {
     Optional<Veterinarian> findByLicenseNumber(String licenseNumber);
+
+    Optional<Veterinarian> findByUserAccountId(String userAccountId);
 }

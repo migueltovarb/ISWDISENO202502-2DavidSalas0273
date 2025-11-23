@@ -29,6 +29,11 @@ public class PetOwnerService {
             .orElseThrow(() -> new ResourceNotFoundException("Owner not found: " + id));
     }
 
+    public PetOwner findByUserAccountId(String userAccountId) {
+        return petOwnerRepository.findByUserAccountId(userAccountId)
+            .orElseThrow(() -> new ResourceNotFoundException("Owner not found for user: " + userAccountId));
+    }
+
     public PetOwner update(String id, PetOwner owner) {
         PetOwner existing = findById(id);
         existing.setFullName(owner.getFullName());

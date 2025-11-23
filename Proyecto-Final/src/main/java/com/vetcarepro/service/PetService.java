@@ -1,6 +1,7 @@
 package com.vetcarepro.service;
 
 import java.util.List;
+import java.util.Collection;
 
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,10 @@ public class PetService {
 
     public List<Pet> findByOwner(String ownerId) {
         return petRepository.findByOwnerId(ownerId);
+    }
+
+    public List<Pet> findByIds(Collection<String> ids) {
+        return petRepository.findAllById(ids);
     }
 
     public Pet findById(String id) {

@@ -1,6 +1,7 @@
 package com.vetcarepro.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -27,12 +28,14 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PostMapping("/register/owner")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/register-owner")
     public ResponseEntity<?> registerOwner(@Valid @RequestBody RegisterOwnerRequest request) {
         return ResponseEntity.ok(authService.registerOwner(request));
     }
 
-    @PostMapping("/register/vet")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/register-veterinarian")
     public ResponseEntity<?> registerVeterinarian(@Valid @RequestBody RegisterVeterinarianRequest request) {
         return ResponseEntity.ok(authService.registerVeterinarian(request));
     }

@@ -26,7 +26,7 @@ public class PetOwnerController {
     private final PetOwnerService petOwnerService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('VET')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VETERINARIAN')")
     public List<PetOwner> listAll() {
         return petOwnerService.findAll();
     }

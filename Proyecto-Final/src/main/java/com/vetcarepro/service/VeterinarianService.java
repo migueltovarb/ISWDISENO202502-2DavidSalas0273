@@ -29,6 +29,11 @@ public class VeterinarianService {
             .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found: " + id));
     }
 
+    public Veterinarian findByUserAccountId(String userAccountId) {
+        return veterinarianRepository.findByUserAccountId(userAccountId)
+            .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found for user: " + userAccountId));
+    }
+
     public Veterinarian update(String id, Veterinarian payload) {
         Veterinarian existing = findById(id);
         existing.setFullName(payload.getFullName());
