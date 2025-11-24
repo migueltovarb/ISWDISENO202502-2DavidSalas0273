@@ -1,13 +1,10 @@
 package com.vetcarepro.domain.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import com.vetcarepro.domain.enums.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,26 +15,26 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "users")
-public class UserAccount {
+@Document(collection = "vaccination_plans")
+public class VaccinationPlan {
 
     @Id
     private String id;
 
-    @Indexed(unique = true)
-    @Field("username")
-    private String email;
+    private String petId;
 
-    private String fullName;
+    private String veterinarianId;
 
-    private String password;
+    private String vaccineName;
 
-    private Role role;
+    private LocalDate dueDate;
+
+    private String notes;
 
     @Builder.Default
-    private boolean enabled = true;
+    private boolean completed = false;
 
-    private String referenceId;
+    private LocalDate completionDate;
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();

@@ -1,9 +1,5 @@
 package com.vetcarepro.service;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +13,6 @@ import com.vetcarepro.dto.RegisterOwnerRequest;
 import com.vetcarepro.dto.RegisterVeterinarianRequest;
 import com.vetcarepro.exception.BusinessRuleException;
 import com.vetcarepro.repository.UserAccountRepository;
-import com.vetcarepro.security.jwt.JwtService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,37 +20,28 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final UserAccountRepository userRepository;
     private final PetOwnerService petOwnerService;
     private final VeterinarianService veterinarianService;
-    private final JwtService jwtService;
 
     public AuthResponse login(AuthRequest request) {
         UserAccount user = userRepository.findFirstByEmailIgnoreCase(request.getEmail())
-            .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
-
+            .orElseThrow(() -> new BusinessRuleException("Usuario o contraseña inválidos"));
         if (!user.isEnabled()) {
-            throw new DisabledException("User account is disabled");
+            throw new BusinessRuleException("Cuenta deshabilitada");
         }
-
-        try {
-            authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-        } catch (BadCredentialsException ex) {
-            throw new BadCredentialsException("Invalid email or password");
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new BusinessRuleException("Usuario o contraseña inválidos");
         }
-
-        String token = jwtService.generateToken(user);
-        return new AuthResponse(token, user.getRole(), user.getId());
+        return new AuthResponse(user.getId(), user.getEmail(), user.getFullName(), user.getRole(), user.getReferenceId());
     }
 
     public PetOwner registerOwner(RegisterOwnerRequest request) {
         ensureEmailAvailable(request.getEmail());
         UserAccount user = UserAccount.builder()
             .email(request.getEmail())
+            .fullName(request.getFullName())
             .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.OWNER)
             .build();
@@ -77,6 +63,7 @@ public class AuthService {
         ensureEmailAvailable(request.getEmail());
         UserAccount user = UserAccount.builder()
             .email(request.getEmail())
+            .fullName(request.getFullName())
             .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.VETERINARIAN)
             .build();
@@ -100,5 +87,10 @@ public class AuthService {
             .ifPresent(existing -> {
                 throw new BusinessRuleException("Email already registered: " + email);
             });
+    }
+
+    public UserAccount findByEmail(String email) {
+        return userRepository.findFirstByEmailIgnoreCase(email)
+            .orElseThrow(() -> new BusinessRuleException("Usuario no encontrado: " + email));
     }
 }

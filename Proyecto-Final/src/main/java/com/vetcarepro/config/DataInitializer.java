@@ -19,6 +19,7 @@ public class DataInitializer {
                 user -> {},
                 () -> repository.save(UserAccount.builder()
                     .email("admin@vetcarepro.local")
+                    .fullName("Admin")
                     .password(encoder.encode("admin123"))
                     .role(Role.ADMIN)
                     .build())

@@ -1,57 +1,104 @@
 # Vet Care Pro
 
-## Descripción general
-Vet Care Pro es un backend Spring Boot orientado a clínicas veterinarias. Expone APIs REST para gestionar propietarios, mascotas, veterinarios, citas, vacunas, historial médico y certificados de vacunación. Persiste datos en MongoDB y protege todos los endpoints (excepto autenticación) con JWT y roles (`OWNER`, `VET`, `ADMIN`).
+Suite completa (backend Spring Boot + frontend React + cliente CLI) para gestionar una clínica veterinaria. Permite registrar dueños y veterinarios, administrar mascotas, agendar/cancelar citas, generar certificados PDF al vacunar, definir planes de vacunación y consumir todo desde un panel visual por rol.
 
-## Cómo ejecutar el backend
-1. **Variables de entorno mínimas** (puedes exportarlas en tu shell o colocarlas en un `.env`):
+## Contenido
+1. [Arquitectura](#arquitectura)
+2. [Requisitos](#requisitos)
+3. [Backend](#backend)
+4. [Frontend](#frontend)
+5. [Cliente CLI](#cliente-cli)
+6. [Variables y auto push](#variables-y-auto-push)
+7. [Patrones de diseño](#patrones-de-diseño)
+8. [Estructura y contribuciones](#estructura-y-contribuciones)
+
+## Arquitectura
+- **Backend**: Spring Boot 3.4 (Java 17) + MongoDB. Expone APIs REST para dueños, veterinarios, mascotas, citas, historiales, planes y certificados. Genera certificados en PDF y puede enviar notificaciones/recordatorios configurables.
+- **Frontend**: React + Vite. Dos tableros:  
+  - Dueño: registra mascotas, ve próximas citas, planes programados y certificados emitidos.  
+  - Veterinario: agrega pacientes por ID, agenda y cancela citas, crea planes de vacunación y los marca como completados.
+- **CLI**: cliente de consola que interactúa con la misma API para pruebas rápidas.
+
+## Requisitos
+- Java 17+
+- Maven 3.9+
+- Node.js 20+ / npm 10+
+- MongoDB (local o Atlas)
+
+## Backend
+1. **Configura variables mínimas**
    ```bash
    export MONGODB_URI=mongodb://localhost:27017/vetcarepro
-   export JWT_SECRET=bXktc2VjcmV0LWF0LWxlYXN0LTMyLWNoYXJz
+   export JWT_SECRET=dW5TZWNyZXRvU3VwZXJMYXJnb1NlZ3VybzEyMzQ1Ng==
    ```
-2. **Compilación y pruebas (opcional)**
+2. **Compila y empaqueta**
    ```bash
-   cd "proyecto final"
-   ./mvnw clean test
+   mvn clean package -DskipTests
    ```
-3. **Ejecución**
+3. **Ejecuta**
    ```bash
-   cd "proyecto final"
-   ./mvnw spring-boot:run
+   mvn spring-boot:run
    ```
-   El API quedará expuesto en `http://localhost:8080`. Puedes cambiar el puerto con `SERVER_PORT`.
+   El API queda en `http://localhost:8080` (ajusta `SERVER_PORT` si lo necesitas).
 
-## Variables de entorno relevantes
-- `MONGODB_URI` / `MONGODB_DB`: conexión hacia MongoDB.
-- `JWT_SECRET`: clave Base64 usada por JWT.
-- `JWT_EXPIRATION_MINUTES`: vigencia del token.
-- `CERTIFICATE_STORAGE_PATH`: carpeta donde se guardan los PDF; por defecto `certificates/` dentro del proyecto.
-- `NOTIFICATION_CHANNELS`: lista separada por comas (`EMAIL,WHATSAPP,SMS`).
-- `REMINDER_*`: ventanas de recordatorios para citas y vacunas.
-- `GIT_AUTO_PUSH_*`: configuración del watcher de auto push (ver siguiente sección).
+### Endpoints destacados
+- Autenticación: `POST /auth/login`, `POST /auth/register-owner`, `POST /auth/register-veterinarian`.
+- Mascotas/dueños/veterinarios: `GET/POST /api/pets`, `GET /api/owners`, `GET /api/veterinarians`.
+- Citas: `GET /api/appointments`, `GET /api/appointments/veterinarian/{id}`, `GET /api/appointments/owner/{id}`, `POST /api/appointments`, `DELETE /api/appointments/{id}`, `POST /api/appointments/{id}/complete`.
+- Planes de vacunación: `POST /api/vaccination-plans`, `GET /api/vaccination-plans/pet/{id}`, `GET /api/vaccination-plans/veterinarian/{id}`, `POST /api/vaccination-plans/{id}/complete`, `DELETE /api/vaccination-plans/{id}`.
+- Historial y certificados: `/api/medical-history`, `/api/vaccination-certificates/{id}`, `/api/vaccination-certificates/pet/{id}`.
 
-## Auto push a Git remoto
-- Se incluye un watcher (`com.vetcarepro.service.git.GitAutoPushService`) que usa `WatchService` para monitorear cambios en disco.
-- Cuando detecta una modificación, ejecuta `scripts/auto-push.sh` (puedes verlo y editarlo si necesitas ajustes).
-- El script hace:
-  ```bash
-  git add -A
-  git commit -m "auto"
-  git push origin main
-  ```
-  Si el remoto `origin` no existe, lo crea apuntando a `https://github.com/migueltovarb/ISWDISENO202502-2DavidSalas0273.git`.
-- Para desactivar el mecanismo basta con exportar `GIT_AUTO_PUSH_ENABLED=false` antes de arrancar el backend (en tests viene deshabilitado vía perfil `test`).
+## Frontend
+1. Instala dependencias:
+   ```bash
+   cd frontend
+   npm install
+   ```
+2. Copia `.env.example` a `.env` y ajusta `VITE_API_BASE` si el backend no corre en `http://localhost:8080`.
+3. Dev server:
+   ```bash
+   npm run dev
+   ```
+   Abre el enlace que imprime Vite (por defecto `http://localhost:5173`).
+4. Build producción:
+   ```bash
+   npm run build
+   ```
 
-## Patrones de diseño aplicados
-1. **Builder**: `VaccinationCertificateBuilder` encapsula la construcción del certificado a partir de cita, mascota, propietario, veterinario y vacuna. Se invoca en `VaccinationCertificateService.generateFromAppointment` para garantizar objetos coherentes.
-2. **Factory**: `NotificationChannelFactory` resuelve la implementación concreta (`EmailNotificationChannel`, `SmsNotificationChannel`, `WhatsappNotificationChannel`) según el tipo configurado. La fábrica se usa dentro de `NotificationService` para orquestar múltiples canales.
-3. **Facade**: `EmailClientFacade` es una fachada sobre `JavaMailSender`, permitiendo que `EmailNotificationChannel` no conozca detalles SMTP.
-4. **(Singleton via Spring)**: Servicios como `PdfGeneratorService` funcionan como singletons administrados por Spring, lo que evita múltiples inicializaciones de recursos costosos y garantiza reuse del `certificate.storage-path`.
+## Cliente CLI
+Ubicado en `src/main/java/com/vetcarepro/cli`. Para probarlo:
+```bash
+mvn spring-boot:run -Dspring.main.web-application-type=none
+```
+(o ejecuta `com.vetcarepro.cli.TerminalClient` desde tu IDE).
 
-## Endpoints clave
-- `/api/auth/login`, `/api/auth/register/owner`, `/api/auth/register/vet`.
-- `/api/owners`, `/api/pets`, `/api/veterinarians`.
-- `/api/appointments` (incluye `/complete` para generar certificados PDF automáticamente en citas de vacunación).
-- `/api/vaccines`, `/api/medical-history`, `/api/certificates/{id}` para descargar el PDF.
+## Variables y auto push
+- `MONGODB_URI` y `MONGODB_DB`: conexión a MongoDB.
+- `JWT_SECRET` y `JWT_EXPIRATION_MINUTES`: firma y vigencia del token.
+- `CERTIFICATE_STORAGE_PATH`: carpeta para PDFs (por defecto `certificates/`).
+- `REMINDER_*`: ventanas para recordatorios de citas/vacunas.
+- `NOTIFICATION_CHANNELS`: canales permitidos (EMAIL, WHATSAPP, SMS).
+- `GIT_AUTO_PUSH_*`: controla el watcher que ejecuta `scripts/auto-push.sh` (desactívalo con `GIT_AUTO_PUSH_ENABLED=false`).
 
-Cada controlador aplica validaciones (`@Valid`) y el `GlobalExceptionHandler` unifica los mensajes de error JSON.
+## Patrones de diseño
+1. **Builder** – `VaccinationCertificateBuilder` crea certificados consistentes a partir de una cita.
+2. **Factory** – `NotificationChannelFactory` resuelve dinámicamente el canal de notificación.
+3. **Facade** – `EmailClientFacade` abstrae `JavaMailSender` para el canal de correo.
+4. **Singleton (Spring)** – servicios como `PdfGeneratorService` o `VaccinationPlanService` se inyectan una sola vez.
+
+## Estructura y contribuciones
+```
+├─ src/main/java/com/vetcarepro/      # Backend
+├─ src/main/resources/static/         # Panel HTML legacy (referencia)
+├─ frontend/                          # Nuevo panel React
+├─ scripts/auto-push.sh               # Script usado por el watcher Git
+└─ certificates/                      # PDFs generados
+```
+
+1. Crea una rama o fork.
+2. Ejecuta `mvn clean package` y `npm run build` antes de abrir un PR.
+3. Describe claramente el cambio y adjunta evidencia (logs, capturas, etc.).
+
+---
+**Demo rápida**:  
+`mvn spring-boot:run` → `cd frontend && npm run dev` → abre el navegador y prueba ambos tableros registrando usuarios, mascotas y agendas.

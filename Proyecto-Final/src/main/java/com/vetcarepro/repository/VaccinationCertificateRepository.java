@@ -12,4 +12,6 @@ public interface VaccinationCertificateRepository extends MongoRepository<Vaccin
     Optional<VaccinationCertificate> findByAppointmentId(String appointmentId);
 
     List<VaccinationCertificate> findByExpirationDateBetween(LocalDate start, LocalDate end);
+
+    List<VaccinationCertificate> findByPetId(String petId);
 }

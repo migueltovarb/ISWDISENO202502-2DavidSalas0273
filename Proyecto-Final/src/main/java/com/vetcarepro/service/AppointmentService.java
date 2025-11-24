@@ -93,6 +93,10 @@ public class AppointmentService {
         return appointmentRepository.findByVeterinarianId(veterinarianId);
     }
 
+    public List<Appointment> findByPet(String petId) {
+        return appointmentRepository.findByPetId(petId);
+    }
+
     private static class BusinessRuleChecks {
         static void validateAppointment(Appointment appointment) {
             if (appointment.getType() == AppointmentType.VACCINATION && appointment.getVaccineId() == null) {

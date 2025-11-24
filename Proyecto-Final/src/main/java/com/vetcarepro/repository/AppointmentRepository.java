@@ -18,4 +18,6 @@ public interface AppointmentRepository extends MongoRepository<Appointment, Stri
     List<Appointment> findByReminderSentFalseAndAppointmentDateBetween(LocalDateTime start, LocalDateTime end);
 
     List<Appointment> findByPetIdAndAppointmentDateBetween(String petId, LocalDateTime start, LocalDateTime end);
+
+    List<Appointment> findByPetId(String petId);
 }

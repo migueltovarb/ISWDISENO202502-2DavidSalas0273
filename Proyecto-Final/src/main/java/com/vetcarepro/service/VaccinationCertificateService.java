@@ -76,6 +76,10 @@ public class VaccinationCertificateService {
             .orElseThrow(() -> new ResourceNotFoundException("Certificate not found: " + id));
     }
 
+    public java.util.List<VaccinationCertificate> findByPet(String petId) {
+        return certificateRepository.findByPetId(petId);
+    }
+
     public VaccinationCertificateResponse toResponse(VaccinationCertificate certificate) {
         return VaccinationCertificateResponse.builder()
             .id(certificate.getId())

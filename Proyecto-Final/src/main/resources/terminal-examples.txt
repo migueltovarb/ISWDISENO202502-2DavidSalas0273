@@ -1,0 +1,27 @@
+# VetCarePro API - Uso desde terminal
+
+# Login (devuelve JWT)
+curl -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@mail.com","password":"Admin123"}'
+
+# Registrar dueño (público)
+curl -X POST http://localhost:8080/auth/register-owner \
+  -H "Content-Type: application/json" \
+  -d '{"email":"dueno@mail.com","password":"12345","fullName":"Juan"}'
+
+# Registrar veterinario (público)
+curl -X POST http://localhost:8080/auth/register-veterinarian \
+  -H "Content-Type: application/json" \
+  -d '{"email":"vet@mail.com","password":"12345","fullName":"Dra Vet","phone":"123","licenseNumber":"LIC-001"}'
+
+# Listar mascotas (requiere token)
+TOKEN=TOKEN_AQUI
+curl -X GET http://localhost:8080/api/pets \
+  -H "Authorization: Bearer $TOKEN"
+
+# Crear mascota (requiere token)
+# curl -X POST http://localhost:8080/api/pets \
+#   -H "Authorization: Bearer $TOKEN" \
+#   -H "Content-Type: application/json" \
+#   -d '{"ownerId":"ID_OWNER","name":"Firulais","species":"DOG","breed":"Mestizo","neutered":true}'

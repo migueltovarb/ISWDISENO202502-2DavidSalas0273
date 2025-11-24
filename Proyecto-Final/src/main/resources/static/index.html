@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Vet Care Pro · Panel demo</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 0 1rem 2rem;
+            background: #f4f6f8;
+            color: #1f2933;
+        }
+        header {
+            background: #0054a6;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .panel h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: #0d1c2e;
+        }
+        label {
+            display: block;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.45rem 0.5rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        button {
+            margin-top: 0.8rem;
+            padding: 0.6rem 0.8rem;
+            border: none;
+            border-radius: 6px;
+            background: #0ea5e9;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button.secondary {
+            background: #475569;
+        }
+        pre {
+            background: #f1f5f9;
+            padding: 0.75rem;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow: auto;
+            font-size: 0.85rem;
+        }
+        .status {
+            margin-top: 0.6rem;
+            font-size: 0.9rem;
+            min-height: 1.2rem;
+        }
+        .status.ok { color: #15803d; }
+        .status.error { color: #b91c1c; }
+        .columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.5rem 1rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Vet Care Pro · Panel rápido de demostración</h1>
+    <p>Interactúa con las funciones principales sin usar la terminal.</p>
+</header>
+
+<div class="grid">
+    <section class="panel">
+        <h2>1. Login rápido</h2>
+        <label>Email
+            <input id="loginEmail" type="email" placeholder="admin@vetcarepro.local" value="admin@vetcarepro.local">
+        </label>
+        <label>Contraseña
+            <input id="loginPassword" type="password" placeholder="admin123" value="admin123">
+        </label>
+        <button onclick="login()">Iniciar sesión</button>
+        <div class="status" id="loginStatus"></div>
+    </section>
+
+    <section class="panel">
+        <h2>2. Registrar dueño</h2>
+        <div class="columns">
+            <label>Nombre completo<input id="ownerFullName" placeholder="Laura Pérez"></label>
+            <label>Email<input id="ownerEmail" type="email" placeholder="dueño@correo.com"></label>
+            <label>Contraseña<input id="ownerPassword" type="password" placeholder="********"></label>
+            <label>Teléfono<input id="ownerPhone" placeholder="+57 300 000 0000"></label>
+            <label>Dirección<input id="ownerAddress" placeholder="Calle 123"></label>
+        </div>
+        <button onclick="registerOwner()">Guardar dueño</button>
+        <div class="status" id="ownerStatus"></div>
+    </section>
+
+    <section class="panel">
+        <h2>3. Registrar veterinario</h2>
+        <div class="columns">
+            <label>Nombre completo<input id="vetFullName" placeholder="Dr. Juan Ruiz"></label>
+            <label>Email<input id="vetEmail" type="email" placeholder="vet@correo.com"></label>
+            <label>Contraseña<input id="vetPassword" type="password" placeholder="********"></label>
+            <label>Teléfono<input id="vetPhone" placeholder="+57 300 000 0000"></label>
+            <label>Licencia<input id="vetLicense" placeholder="LIC-0001"></label>
+            <label>Especialización<input id="vetSpecialization" placeholder="Cirugía"></label>
+        </div>
+        <button onclick="registerVeterinarian()">Guardar veterinario</button>
+        <div class="status" id="vetStatus"></div>
+    </section>
+
+    <section class="panel">
+        <h2>4. Mascotas</h2>
+        <div class="columns">
+            <label>ID Dueño<input id="petOwnerId" placeholder="ownerId"></label>
+            <label>Nombre<input id="petName" placeholder="Firulais"></label>
+            <label>Especie
+                <select id="petSpecies">
+                    <option value="DOG">Perro</option>
+                    <option value="CAT">Gato</option>
+                    <option value="BIRD">Ave</option>
+                    <option value="REPTILE">Reptil</option>
+                    <option value="SMALL_MAMMAL">Pequeño mamífero</option>
+                    <option value="OTHER">Otro</option>
+                </select>
+            </label>
+            <label>Raza<input id="petBreed" placeholder="Golden Retriever"></label>
+            <label>Fecha nacimiento<input id="petBirth" type="date"></label>
+            <label>Microchip<input id="petChip" placeholder="123-456"></label>
+            <label>¿Castrado?
+                <select id="petNeutered">
+                    <option value="false">No</option>
+                    <option value="true">Sí</option>
+                </select>
+            </label>
+        </div>
+        <button onclick="createPet()">Registrar mascota</button>
+        <button class="secondary" onclick="loadPets()">Actualizar lista</button>
+        <div class="status" id="petStatus"></div>
+        <pre id="petsList">Sin datos aún.</pre>
+    </section>
+
+    <section class="panel">
+        <h2>5. Citas</h2>
+        <div class="columns">
+            <label>ID Dueño<input id="apptOwnerId" placeholder="ownerId"></label>
+            <label>ID Mascota<input id="apptPetId" placeholder="petId"></label>
+            <label>ID Veterinario<input id="apptVetId" placeholder="vetId"></label>
+            <label>Tipo
+                <select id="apptType">
+                    <option value="CONSULTATION">Consulta</option>
+                    <option value="VACCINATION">Vacunación</option>
+                </select>
+            </label>
+            <label>Fecha y hora<input id="apptDate" type="datetime-local"></label>
+            <label>Motivo<textarea id="apptReason" placeholder="Control general"></textarea></label>
+            <label>ID Vacuna (solo si es vacunación)<input id="apptVaccineId" placeholder="vaccineId"></label>
+        </div>
+        <button onclick="createAppointment()">Crear cita</button>
+        <button class="secondary" onclick="loadAppointments()">Ver citas</button>
+        <div class="status" id="appointmentStatus"></div>
+        <pre id="appointmentsList">Sin datos aún.</pre>
+    </section>
+
+    <section class="panel">
+        <h2>6. Vacunas</h2>
+        <div class="columns">
+            <label>Nombre<input id="vaccineName" placeholder="Rabia"></label>
+            <label>Fabricante<input id="vaccineManufacturer" placeholder="ACME Labs"></label>
+            <label>Descripción<textarea id="vaccineDescription" placeholder="Notas opcionales"></textarea></label>
+            <label>Días de vigencia<input id="vaccineValidity" type="number" value="365"></label>
+            <label>Días aviso previo<input id="vaccineReminder" type="number" value="7"></label>
+        </div>
+        <button onclick="registerVaccine()">Guardar vacuna</button>
+        <button class="secondary" onclick="loadVaccines()">Ver vacunas</button>
+        <div class="status" id="vaccineStatus"></div>
+        <pre id="vaccinesList">Sin datos aún.</pre>
+    </section>
+
+    <section class="panel">
+        <h2>7. Historial médico</h2>
+        <div class="columns">
+            <label>ID Mascota<input id="historyPetId" placeholder="petId"></label>
+            <label>ID Veterinario<input id="historyVetId" placeholder="vetId"></label>
+            <label>Fecha visita<input id="historyDate" type="datetime-local"></label>
+            <label>Resumen<textarea id="historySummary" placeholder="Síntomas, observaciones"></textarea></label>
+            <label>Diagnóstico<textarea id="historyDiagnosis"></textarea></label>
+            <label>Tratamientos (separar por coma)<textarea id="historyTreatments"></textarea></label>
+            <label>Recomendaciones<textarea id="historyRecommendations"></textarea></label>
+        </div>
+        <button onclick="registerHistory()">Registrar entrada</button>
+        <button class="secondary" onclick="loadHistory()">Ver historial</button>
+        <div class="status" id="historyStatus"></div>
+        <pre id="historyList">Sin datos aún.</pre>
+    </section>
+
+    <section class="panel">
+        <h2>8. Consultas rápidas</h2>
+        <button onclick="loadOwners()">Listar dueños</button>
+        <button onclick="loadVets()">Listar veterinarios</button>
+        <div class="status" id="listsStatus"></div>
+        <pre id="ownersList">Dueños: presiona el botón.</pre>
+        <pre id="vetsList">Veterinarios: presiona el botón.</pre>
+    </section>
+
+    <section class="panel">
+        <h2>9. Certificados de vacunación</h2>
+        <label>ID Certificado<input id="certificateId" placeholder="certificateId"></label>
+        <button onclick="loadCertificate()">Buscar certificado</button>
+        <div class="status" id="certificateStatus"></div>
+        <pre id="certificateDetails">Sin consulta.</pre>
+    </section>
+</div>
+
+<script>
+    const state = {
+        user: null
+    };
+
+    async function api(path, options = {}) {
+        const config = {
+            headers: { 'Content-Type': 'application/json' },
+            ...options
+        };
+        const response = await fetch(path, config);
+        if (!response.ok) {
+            let message = 'Error ' + response.status;
+            try {
+                const payload = await response.json();
+                message = payload.message || JSON.stringify(payload);
+            } catch (_) {
+                // sin cuerpo
+            }
+            throw new Error(message);
+        }
+        if (response.status === 204) return null;
+        const text = await response.text();
+        return text ? JSON.parse(text) : null;
+    }
+
+    function setStatus(id, message, ok = true) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = message || '';
+        el.className = 'status ' + (ok ? 'ok' : 'error');
+    }
+
+    function value(id) {
+        return document.getElementById(id).value.trim();
+    }
+
+    function renderJson(id, data) {
+        const el = document.getElementById(id);
+        el.textContent = data && data.length === 0 ? 'Sin registros.' : JSON.stringify(data, null, 2);
+    }
+
+    async function login() {
+        try {
+            const payload = {
+                email: value('loginEmail'),
+                password: value('loginPassword')
+            };
+            const resp = await api('/auth/login', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            state.user = resp;
+            setStatus('loginStatus', `Sesión iniciada como ${resp.fullName} (${resp.role})`);
+        } catch (err) {
+            state.user = null;
+            setStatus('loginStatus', err.message, false);
+        }
+    }
+
+    async function registerOwner() {
+        try {
+            const payload = {
+                fullName: value('ownerFullName'),
+                email: value('ownerEmail'),
+                password: value('ownerPassword'),
+                phone: value('ownerPhone'),
+                address: value('ownerAddress')
+            };
+            const resp = await api('/auth/register-owner', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            setStatus('ownerStatus', `Dueño creado con id ${resp.id}`);
+            loadOwners();
+        } catch (err) {
+            setStatus('ownerStatus', err.message, false);
+        }
+    }
+
+    async function registerVeterinarian() {
+        try {
+            const payload = {
+                fullName: value('vetFullName'),
+                email: value('vetEmail'),
+                password: value('vetPassword'),
+                phone: value('vetPhone'),
+                licenseNumber: value('vetLicense'),
+                specialization: value('vetSpecialization')
+            };
+            const resp = await api('/auth/register-veterinarian', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            setStatus('vetStatus', `Veterinario creado con id ${resp.id}`);
+            loadVets();
+        } catch (err) {
+            setStatus('vetStatus', err.message, false);
+        }
+    }
+
+    async function createPet() {
+        try {
+            const payload = {
+                ownerId: value('petOwnerId'),
+                name: value('petName'),
+                species: document.getElementById('petSpecies').value,
+                breed: value('petBreed'),
+                birthDate: document.getElementById('petBirth').value || null,
+                microchipId: value('petChip'),
+                neutered: document.getElementById('petNeutered').value === 'true'
+            };
+            const resp = await api('/api/pets', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            setStatus('petStatus', `Mascota creada con id ${resp.id}`);
+            loadPets();
+        } catch (err) {
+            setStatus('petStatus', err.message, false);
+        }
+    }
+
+    async function loadPets() {
+        try {
+            const data = await api('/api/pets');
+            renderJson('petsList', data);
+            setStatus('petStatus', `Total mascotas: ${data.length}`);
+        } catch (err) {
+            setStatus('petStatus', err.message, false);
+        }
+    }
+
+    async function createAppointment() {
+        try {
+            const payload = {
+                ownerId: value('apptOwnerId'),
+                petId: value('apptPetId'),
+                veterinarianId: value('apptVetId'),
+                type: document.getElementById('apptType').value,
+                appointmentDate: document.getElementById('apptDate').value,
+                reason: document.getElementById('apptReason').value,
+                vaccineId: value('apptVaccineId') || null
+            };
+            const resp = await api('/api/appointments', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            setStatus('appointmentStatus', `Cita creada con id ${resp.id}`);
+            loadAppointments();
+        } catch (err) {
+            setStatus('appointmentStatus', err.message, false);
+        }
+    }
+
+    async function loadAppointments() {
+        try {
+            const data = await api('/api/appointments');
+            renderJson('appointmentsList', data);
+            setStatus('appointmentStatus', `Total citas: ${data.length}`);
+        } catch (err) {
+            setStatus('appointmentStatus', err.message, false);
+        }
+    }
+
+    async function registerVaccine() {
+        try {
+            const payload = {
+                name: value('vaccineName'),
+                manufacturer: value('vaccineManufacturer'),
+                description: document.getElementById('vaccineDescription').value,
+                validityDays: Number(document.getElementById('vaccineValidity').value || 0),
+                reminderWindowDays: Number(document.getElementById('vaccineReminder').value || 0)
+            };
+            const resp = await api('/api/vaccines', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            setStatus('vaccineStatus', `Vacuna creada con id ${resp.id}`);
+            loadVaccines();
+        } catch (err) {
+            setStatus('vaccineStatus', err.message, false);
+        }
+    }
+
+    async function loadVaccines() {
+        try {
+            const data = await api('/api/vaccines');
+            renderJson('vaccinesList', data);
+            setStatus('vaccineStatus', `Total vacunas: ${data.length}`);
+        } catch (err) {
+            setStatus('vaccineStatus', err.message, false);
+        }
+    }
+
+    async function registerHistory() {
+        try {
+            const treatmentsText = document.getElementById('historyTreatments').value.trim();
+            const payload = {
+                petId: value('historyPetId'),
+                veterinarianId: value('historyVetId'),
+                visitDate: document.getElementById('historyDate').value,
+                summary: document.getElementById('historySummary').value,
+                diagnosis: document.getElementById('historyDiagnosis').value,
+                treatments: treatmentsText ? treatmentsText.split(',').map(t => t.trim()).filter(Boolean) : [],
+                recommendations: document.getElementById('historyRecommendations').value
+            };
+            const resp = await api('/api/medical-history', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            setStatus('historyStatus', `Historial registrado con id ${resp.id}`);
+            loadHistory();
+        } catch (err) {
+            setStatus('historyStatus', err.message, false);
+        }
+    }
+
+    async function loadHistory() {
+        const petId = value('historyPetId');
+        if (!petId) {
+            setStatus('historyStatus', 'Ingresa un petId para consultar', false);
+            return;
+        }
+        try {
+            const data = await api('/api/medical-history?petId=' + encodeURIComponent(petId));
+            renderJson('historyList', data);
+            setStatus('historyStatus', `Registros para mascota ${petId}: ${data.length}`);
+        } catch (err) {
+            setStatus('historyStatus', err.message, false);
+        }
+    }
+
+    async function loadOwners() {
+        try {
+            const data = await api('/api/owners');
+            renderJson('ownersList', data);
+            setStatus('listsStatus', `Dueños cargados: ${data.length}`);
+        } catch (err) {
+            setStatus('listsStatus', err.message, false);
+        }
+    }
+
+    async function loadVets() {
+        try {
+            const data = await api('/api/veterinarians');
+            renderJson('vetsList', data);
+            setStatus('listsStatus', `Veterinarios cargados: ${data.length}`);
+        } catch (err) {
+            setStatus('listsStatus', err.message, false);
+        }
+    }
+
+    async function loadCertificate() {
+        const id = value('certificateId');
+        if (!id) {
+            setStatus('certificateStatus', 'Ingresa un ID de certificado', false);
+            return;
+        }
+        try {
+            const data = await api('/api/vaccination-certificates/' + encodeURIComponent(id));
+            renderJson('certificateDetails', data);
+            setStatus('certificateStatus', 'Certificado encontrado.');
+        } catch (err) {
+            setStatus('certificateStatus', err.message, false);
+        }
+    }
+</script>
+</body>
+</html>

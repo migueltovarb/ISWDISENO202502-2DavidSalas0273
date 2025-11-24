@@ -1,12 +1,15 @@
 package com.vetcarepro.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vetcarepro.domain.entity.PetOwner;
+import com.vetcarepro.domain.entity.Veterinarian;
 import com.vetcarepro.dto.AuthRequest;
 import com.vetcarepro.dto.AuthResponse;
 import com.vetcarepro.dto.RegisterOwnerRequest;
@@ -19,24 +22,25 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Validated
 public class AuthController {
 
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+    public AuthResponse login(@RequestBody @Valid AuthRequest request) {
+        return authService.login(request);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register-owner")
-    public ResponseEntity<?> registerOwner(@Valid @RequestBody RegisterOwnerRequest request) {
-        return ResponseEntity.ok(authService.registerOwner(request));
+    @ResponseStatus(HttpStatus.CREATED)
+    public PetOwner registerOwner(@RequestBody @Valid RegisterOwnerRequest request) {
+        return authService.registerOwner(request);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register-veterinarian")
-    public ResponseEntity<?> registerVeterinarian(@Valid @RequestBody RegisterVeterinarianRequest request) {
-        return ResponseEntity.ok(authService.registerVeterinarian(request));
+    @ResponseStatus(HttpStatus.CREATED)
+    public Veterinarian registerVeterinarian(@RequestBody @Valid RegisterVeterinarianRequest request) {
+        return authService.registerVeterinarian(request);
     }
 }
