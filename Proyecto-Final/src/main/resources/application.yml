@@ -8,7 +8,7 @@ spring:
       - org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration
   data:
     mongodb:
-      uri: "${MONGODB_URI:mongodb+srv://alejo:Vetcare123@vetcarepro.8whypny.mongodb.net/vetcarepro?retryWrites=true&w=majority&appName=VetCarePro}"
+      uri: "${MONGODB_URI:mongodb+srv://alejo:Vetcare123@vetcarepro.8whypny.mongodb.net/?appName=VetCarePro}"
       database: ${MONGODB_DB:vetcarepro}
   mail:
     host: ${MAIL_HOST:localhost}

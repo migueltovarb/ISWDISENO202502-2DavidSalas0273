@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import './App.css'
+import LandingPage from './LandingPage'
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://localhost:8080'
 
@@ -759,7 +760,7 @@ function VetDashboard({ user, onLogout }) {
 
 function App() {
   const [user, setUser] = useState(null)
-  const [view, setView] = useState('login')
+  const [view, setView] = useState('landing')
 
   const handleLogin = async (credentials) => {
     const data = await api('/auth/login', {
@@ -814,7 +815,12 @@ function App() {
       </div>
       <div className="app-content">
         {!user ? (
-          view === 'login' ? (
+          view === 'landing' ? (
+            <LandingPage 
+              onStartLogin={() => setView('login')} 
+              onStartRegister={() => setView('register')} 
+            />
+          ) : view === 'login' ? (
             <LoginForm onLogin={handleLogin} goRegister={() => setView('register')} />
           ) : (
             <RegisterForm onRegister={handleRegister} goLogin={() => setView('login')} />
