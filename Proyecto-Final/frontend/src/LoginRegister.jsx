@@ -35,7 +35,7 @@ export function LoginForm({ onLogin, goRegister, goLanding }) {
         <div className="auth-card">
           <div className="auth-header">
             <div className="auth-logo">
-              <span className="logo-icon">🐾</span>
+              <span className="logo-icon"></span>
               <div>
                 <h1>VetCarePro</h1>
                 <p className="auth-subtitle">Inicia sesión en tu cuenta</p>
@@ -73,7 +73,7 @@ export function LoginForm({ onLogin, goRegister, goLanding }) {
             <StatusMessage status={status} />
 
             <button type="submit" className="btn btn-primary btn-large">
-              🔓 Iniciar Sesión
+              Iniciar Sesión
             </button>
           </form>
 
@@ -133,7 +133,7 @@ export function RegisterForm({ onRegister, goLogin, goLanding }) {
         <div className="auth-card">
           <div className="auth-header">
             <div className="auth-logo">
-              <span className="logo-icon">🐾</span>
+              <span className="logo-icon"></span>
               <div>
                 <h1>VetCarePro</h1>
                 <p className="auth-subtitle">Crea tu cuenta</p>
@@ -150,7 +150,7 @@ export function RegisterForm({ onRegister, goLogin, goLanding }) {
                 checked={!isVet}
                 onChange={handleChange}
               />
-              <span>👤 Dueño de Mascota</span>
+              <span>Dueño de Mascota</span>
             </label>
             <label className={`role-option ${isVet ? 'active' : ''}`}>
               <input
@@ -160,7 +160,7 @@ export function RegisterForm({ onRegister, goLogin, goLanding }) {
                 checked={isVet}
                 onChange={handleChange}
               />
-              <span>👨‍⚕️ Veterinario</span>
+              <span>Veterinario</span>
             </label>
           </div>
 
@@ -267,7 +267,7 @@ export function RegisterForm({ onRegister, goLogin, goLanding }) {
             <StatusMessage status={status} />
 
             <button type="submit" className="btn btn-primary btn-large">
-              📋 Crear Cuenta
+              Crear Cuenta
             </button>
           </form>
 

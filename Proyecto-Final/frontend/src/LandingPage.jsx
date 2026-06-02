@@ -49,7 +49,7 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
       {/* NAVBAR */}
       <nav className={`nav ${isNavScrolled ? 'scrolled' : ''}`} role="navigation">
         <a href="#" className="nav-logo">
-          <span className="nav-logo-icon">🐾</span>
+          <span className="nav-logo-icon"></span>
           VetCare<span>Pro</span>
         </a>
         <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`} id="navLinks">
@@ -72,26 +72,26 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
       {/* HERO */}
       <section id="hero" className="hero" aria-label="Bienvenida a VetCarePro">
         <div className="hero-bg"></div>
-        <div className="hero-leaves" aria-hidden="true">🌿</div>
+        <div className="hero-leaves" aria-hidden="true"></div>
 
         <div className="hero-content">
           <div className="hero-badge"><span className="dot"></span> Cuidado veterinario de calidad</div>
           <h1 className="hero-title">Tu clínica veterinaria <br/><em>en línea</em></h1>
           <p className="hero-subtitle">VetCarePro conecta dueños de mascotas con veterinarios profesionales. Citas, consultas y seguimiento médico en un solo lugar.</p>
           <div className="hero-actions">
-            <button onClick={onStartRegister} className="btn btn-primary">📋 Crear Cuenta</button>
-            <button onClick={onStartLogin} className="btn btn-outline">🔓 Iniciar Sesión</button>
+            <button onClick={onStartRegister} className="btn btn-primary">Crear Cuenta</button>
+            <button onClick={onStartLogin} className="btn btn-outline">Iniciar Sesión</button>
           </div>
           <div className="hero-stats">
             <div className="hero-stat"><div className="num">1000+</div><div className="label">MASCOTAS</div></div>
             <div className="hero-stat"><div className="num">50+</div><div className="label">VETERINARIOS</div></div>
-            <div className="hero-stat"><div className="num">4.9★</div><div className="label">CALIFICACIÓN</div></div>
+            <div className="hero-stat"><div className="num">4.9</div><div className="label">CALIFICACIÓN</div></div>
           </div>
         </div>
 
         <div className="hero-image" aria-hidden="true">
           <div className="hero-animal-card">
-            <div className="animal-emoji">🐱</div>
+            <img src="/fotos/Veterinaria.jpg" alt="Veterinaria atendiendo mascota" className="animal-img" />
             <h3>Mascotas Cuidadas</h3>
             <p>Con atención profesional</p>
           </div>
@@ -101,38 +101,50 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
       {/* FEATURES */}
       <section id="features" className="features reveal" aria-label="Características principales">
         <div className="section-header">
-          <span className="section-label">✨ CARACTERÍSTICAS</span>
+          <span className="section-label">CARACTERÍSTICAS</span>
           <h2 className="section-title">Servicios <em>profesionales</em></h2>
           <p className="section-desc">Todo lo que necesitas para mantener a tu mascota saludable.</p>
         </div>
         <div className="features-grid reveal">
           <div className="feature-card">
-            <div className="feature-icon">🏥</div>
+            <div className="feature-icon">
+              <img src="/fotos/Veterinaria.jpg" alt="Consultas Veterinarias" className="feature-img" />
+            </div>
             <h3>Consultas Veterinarias</h3>
             <p>Conecta con veterinarios calificados desde la comodidad de tu hogar.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">💉</div>
+            <div className="feature-icon">
+              <img src="/fotos/istockphoto-1845512061-612x612.jpg" alt="Historial Médico" className="feature-img" />
+            </div>
             <h3>Historial Médico</h3>
             <p>Mantén registro completo de vacunas y tratamientos de tu mascota.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">📅</div>
+            <div className="feature-icon">
+              <img src="/fotos/da.jpg" alt="Citas Agendadas" className="feature-img" />
+            </div>
             <h3>Citas Agendadas</h3>
             <p>Reserva citas fácilmente con disponibilidad en tiempo real.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">🔔</div>
+            <div className="feature-icon">
+              <img src="/fotos/dasda.jpg" alt="Recordatorios" className="feature-img" />
+            </div>
             <h3>Recordatorios</h3>
             <p>Notificaciones automáticas para vacunas y chequeos pendientes.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">📝</div>
+            <div className="feature-icon">
+              <img src="/fotos/sdwa.jpg" alt="Recetas Digitales" className="feature-img" />
+            </div>
             <h3>Recetas Digitales</h3>
             <p>Recibe recetas y prescripciones digitales al instante.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">👥</div>
+            <div className="feature-icon">
+              <img src="/fotos/AMS_nota_blog_dia_de_los_animales.webp" alt="Comunidad" className="feature-img" />
+            </div>
             <h3>Comunidad</h3>
             <p>Conecta con otros dueños de mascotas y comparte experiencias.</p>
           </div>
@@ -142,14 +154,16 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
       {/* SLIDER */}
       <section id="services" className="slider reveal" aria-label="Servicios destacados">
         <div className="section-header">
-          <span className="section-label">⭐ DESTACADOS</span>
+          <span className="section-label">DESTACADOS</span>
           <h2 className="section-title">Servicios que <em>transforman</em></h2>
           <p className="section-desc">Conoce lo que otros dueños tienen para decir sobre nuestro servicio.</p>
         </div>
         <div className="slider-wrap reveal">
           <div className="slider-track" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
             <div className="slide" style={{ background: 'linear-gradient(135deg, #1b4332, #2E7D32)' }}>
-              <div className="slide-bg" aria-hidden="true">🐕</div>
+              <div className="slide-bg" aria-hidden="true">
+                <img src="/fotos/animales_que_viven_en_el_campo_3477_1200.jpg" alt="" className="slide-bg-img" />
+              </div>
               <div className="slide-content">
                 <span className="slide-tag">TESTIMONIO</span>
                 <h3>Mascota saludable y feliz</h3>
@@ -157,7 +171,9 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
               </div>
             </div>
             <div className="slide" style={{ background: 'linear-gradient(135deg, #0d3b47, #006064)' }}>
-              <div className="slide-bg" aria-hidden="true">🐰</div>
+              <div className="slide-bg" aria-hidden="true">
+                <img src="/fotos/dasdas.webp" alt="" className="slide-bg-img" />
+              </div>
               <div className="slide-content">
                 <span className="slide-tag">TESTIMONIO</span>
                 <h3>Atención rápida y eficiente</h3>
@@ -165,7 +181,9 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
               </div>
             </div>
             <div className="slide" style={{ background: 'linear-gradient(135deg, #4a1942, #6a1b4d)' }}>
-              <div className="slide-bg" aria-hidden="true">🐦</div>
+              <div className="slide-bg" aria-hidden="true">
+                <img src="/fotos/tortuga-mascota-cuales-son-ventajas-y-desventajas-865936.jpg" alt="" className="slide-bg-img" />
+              </div>
               <div className="slide-content">
                 <span className="slide-tag">TESTIMONIO</span>
                 <h3>Confianza en línea</h3>
@@ -173,7 +191,9 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
               </div>
             </div>
             <div className="slide" style={{ background: 'linear-gradient(135deg, #3e2723, #5D4037)' }}>
-              <div className="slide-bg" aria-hidden="true">🐱</div>
+              <div className="slide-bg" aria-hidden="true">
+                <img src="/fotos/sloth-animal-on-tree-branch-and-looking-at-camera-photo.jpg" alt="" className="slide-bg-img" />
+              </div>
               <div className="slide-content">
                 <span className="slide-tag">TESTIMONIO</span>
                 <h3>Recordatorios útiles</h3>
@@ -181,7 +201,9 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
               </div>
             </div>
             <div className="slide" style={{ background: 'linear-gradient(135deg, #1a237e, #283593)' }}>
-              <div className="slide-bg" aria-hidden="true">🐠</div>
+              <div className="slide-bg" aria-hidden="true">
+                <img src="/fotos/medidas-para-proteger-a-los-animales-en-peligro-de-extincion.jpg" alt="" className="slide-bg-img" />
+              </div>
               <div className="slide-content">
                 <span className="slide-tag">TESTIMONIO</span>
                 <h3>Historial completo</h3>
@@ -210,7 +232,7 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
       <section id="about" className="about reveal" aria-label="Acerca de nosotros">
         <div className="about-content">
           <div className="about-text">
-            <span className="section-label">🏥 SOBRE NOSOTROS</span>
+            <span className="section-label">SOBRE NOSOTROS</span>
             <h2 className="section-title">Cuidando mascotas con <em>profesionalismo</em></h2>
             <p>VetCarePro surge de la necesidad de democratizar el acceso a servicios veterinarios de calidad. Nuestro equipo de veterinarios certificados trabaja 24/7 para que tu mascota siempre tenga la mejor atención.</p>
             <p>Con tecnología moderna y un compromiso genuino con el bienestar animal, hemos ayudado a miles de mascotas a vivir vidas más saludables y felices.</p>
@@ -235,7 +257,7 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
           </div>
           <div className="about-image" aria-hidden="true">
             <div className="about-card">
-              <span className="card-icon">👨‍⚕️</span>
+              <img src="/fotos/Captura-de-pantalla-2020-07-02-a-las-15.33.21.png" alt="Expertos en salud animal" className="about-card-img" />
               <p>Expertos en salud animal</p>
             </div>
           </div>
@@ -248,7 +270,7 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
           <h2>¿Listo para cuidar a tu mascota?</h2>
           <p>Únete a miles de dueños satisfechos. Crea tu cuenta hoy mismo.</p>
           <div className="cta-buttons">
-            <button onClick={onStartRegister} className="btn btn-primary">Crear Cuenta Gratis 🚀</button>
+            <button onClick={onStartRegister} className="btn btn-primary">Crear Cuenta Gratis</button>
             <button onClick={onStartLogin} className="btn btn-outline">Ya tengo cuenta</button>
           </div>
         </div>
@@ -258,7 +280,7 @@ export default function LandingPage({ onStartLogin, onStartRegister }) {
       <footer role="contentinfo">
         <div className="footer-content">
           <div className="footer-section">
-            <div className="footer-logo">🐾 VetCarePro</div>
+            <div className="footer-logo">VetCarePro</div>
             <p>Cuidando mascotas, mejorando vidas.</p>
           </div>
           <div className="footer-section">
